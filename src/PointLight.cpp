@@ -17,7 +17,7 @@ glm::vec3 PointLight::getDiffiusion(const Hit& hit, const Scene& scene) const {
     // Calculate the diffuse component
     float teta = glm::dot(lightDir, hitObject->getNormalAt(hitPoint));
     float diff = glm::max(teta, 0.0f);/*NOTE: maybe this could be a Hit function*/
-    glm::vec3 diffuse = color * hitObject->getDiffuseColor() * diff * intensity;
+    glm::vec3 diffuse = color * hitObject->getDiffuseColor(hitPoint) * diff * intensity;
     
     return diffuse;
 }

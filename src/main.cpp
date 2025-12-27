@@ -14,9 +14,11 @@
 #include "Hit.h"
 #include "SceneObject.h"
 #include "Shpere.h"
+#include "SolidColorStrategy.h"
 #include "Light.h"
 #include "PointLight.h"
-
+#include "CheckerboardStrategy.h"
+#include "Plane.h"
 static constexpr int DEFULAT_SCENE_HEIGHT_AND_WIDTH = 1000;
 
 int main(void)
@@ -27,11 +29,11 @@ int main(void)
     std::vector<SceneObject*> sceneObjects;
     std::vector<Light*> sceneLights;
 
-    sceneObjects.push_back(new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
-    sceneObjects.push_back(new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 255.0f, 0.0f)));
+    sceneObjects.push_back(new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, new SolidColorStrategy(glm::vec3(255.0f, 0.0f, 0.0f))));
+    sceneObjects.push_back(new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, new SolidColorStrategy(glm::vec3(0.0f, 255.0f, 0.0f))));
+    sceneObjects.push_back(new Plane(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 1.0f, 1.0f), new CheckerboardStrategy(glm::vec3(200.0f, 200.0f, 200.0f), 0.5f)));
 
-
-    sceneLights.push_back(new PointLight(glm::vec3(-2.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f));
+    sceneLights.push_back(new PointLight(glm::vec3(-2.0f, 0.0f, 4.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f));
     Scene scene = Scene(sceneObjects, sceneLights);
 
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, 10.0f), //position
@@ -47,71 +49,3 @@ int main(void)
     std::cout << result << std::endl;
 
 }
-
-// #include <glad/glad.h>
-// #include <GLFW/glfw3.h>
-// #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
-
-// #include <stb/stb_image.h>
-// #include <stb/stb_image_write.h>
-
-// #include <iostream>
-
-// int main(void)
-// {
-//     std::string filepath = "res/textures/plane.png";
-//     int width, height, comps;
-//     int req_comps = 4;
-//     unsigned char * buffer = stbi_load(filepath.c_str(), &width, &height, &comps, req_comps);
-//     int result = stbi_write_png("res/textures/new_plane.png", width, height, req_comps, buffer, width * comps);
-//     std::cout << result << std::endl;
-//     return 0;
-// }
-
-// #include <GLFW/glfw3.h>
-
-// int main(void)
-// {
-//     GLFWwindow* window;
-
-//     /* Initialize the library */
-//     if (!glfwInit())
-//         return -1;
-
-//     /* Create a windowed mode window and its OpenGL context */
-//     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-//     if (!window)
-//     {
-//         glfwTerminate();
-//         return -1;
-//     }
-
-//     /* Make the window's context current */
-//     glfwMakeContextCurrent(window);
-
-//     /* Loop until the user closes the window */
-//     while (!glfwWindowShouldClose(window))
-//     {
-//         /* Render here */
-//         glClear(GL_COLOR_BUFFER_BIT);
-
-//         glBegin(GL_TRIANGLES);
-//         glVertex2f(-0.5f, -0.5f);
-//         glColor3f(1.0f, 0.0f, 0.0f);
-//         glVertex2f(0.0f, 0.5f);
-//         glColor3f(0.0f, 1.0f, 0.0f);
-//         glVertex2f(0.5f, -0.5f);
-//         glColor3f(0.0f, 0.0f, 1.0f);
-//         glEnd();
-
-//         /* Swap front and back buffers */
-//         glfwSwapBuffers(window);
-
-//         /* Poll for and process events */
-//         glfwPollEvents();
-//     }
-
-//     glfwTerminate();
-//     return 0;
-// }

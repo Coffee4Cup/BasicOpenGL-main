@@ -1,4 +1,13 @@
 #include "Shpere.h"
+#include "ITextureStrategy.h"
+
+Sphere::Sphere(const glm::vec3& center, float radius, ITextureStrategy* textureStrategy)
+    : center(center), radius(radius), m_textureStrategy(textureStrategy) {}
+
+Sphere::~Sphere() {
+    delete m_textureStrategy;
+}
+
 
 /**
  * Intersects the ray with the sphere.
@@ -26,8 +35,8 @@ glm::vec3 Sphere::getNormalAt(const glm::vec3& point) const {
     return glm::normalize(point - center);
 }
 
-glm::vec3 Sphere::getDiffuseColor() const {
-    return color; // Red color
+glm::vec3 Sphere::getDiffuseColor(const glm::vec3& point) const {
+    return m_textureStrategy->getColor(point);
 }
 
 glm::vec3 Sphere::getSpecularColor() const {

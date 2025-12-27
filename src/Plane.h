@@ -6,10 +6,10 @@
 
 class ITextureStrategy;
 
-class Sphere : public SceneObject {
+class Plane : public SceneObject {
 public:
-    Sphere(const glm::vec3& center, float radius, ITextureStrategy* textureStrategy);
-    ~Sphere() override;
+    Plane(const glm::vec3& point, const glm::vec3& normal, ITextureStrategy* textureStrategy);
+    ~Plane() override;
 
     float intersect(const Ray& ray) const override;
     glm::vec3 getDiffuseColor(const glm::vec3& point) const override;
@@ -18,7 +18,8 @@ public:
     glm::vec3 getNormalAt(const glm::vec3& point) const override;
 
 private:
-    const glm::vec3 center;
-    const float radius;
+    static constexpr float EPSILON = 1e-6f;
+    const glm::vec3 m_point;
+    const glm::vec3 m_normal;
     ITextureStrategy* m_textureStrategy;
 };
