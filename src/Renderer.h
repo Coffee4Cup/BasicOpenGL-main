@@ -1,6 +1,4 @@
 #pragma once
-#include <glm/glm.hpp>
-
 #include <vector>
 #include <string>
 #include "Scene.h"
@@ -8,6 +6,8 @@
 #include "Ray.h"
 #include "Hit.h"
 #include "SceneObject.h"
+#include "Light.h"
+#include <glm/glm.hpp>
 
 class Renderer {
 private:
@@ -23,14 +23,6 @@ private:
     const unsigned int imageHeight;
 
 public:
-
-    Renderer()
-        : currentScene(Scene()),
-         finalImagebuffer(new unsigned char[DEFAULT_IMAGE_HEIGHT_AND_WIDTH * DEFAULT_IMAGE_HEIGHT_AND_WIDTH * REQUIRED_COMPONENTS]),
-         imageWidth(DEFAULT_IMAGE_HEIGHT_AND_WIDTH),
-          imageHeight(DEFAULT_IMAGE_HEIGHT_AND_WIDTH),
-            camera(Camera())
-    {}
 
     Renderer(Camera camera, const Scene& scene, unsigned int width, unsigned int height)
     : currentScene(scene),
@@ -60,11 +52,12 @@ private:
      * 
      * ASK: should this method be part of Camera class? my toughts is that I want the camera to not be awere of the picture plane and rendering process 
      */
-    void constructRayThroughPixel(Ray* ray, const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY);
-    void findIntersection(Hit* hit, const Ray& ray, const Scene& scene);
+    void constructRayThroughPixel(Ray& ray, const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY);
+    void findIntersection(Hit& hit, const Ray& ray, const Scene& scene);
     glm::vec3 getPointOnImagePlane(const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY);
 
     // Returns the color as a 3D vector (0.0 to 255.0 range or 0.0 to 1.0)
-    glm::vec3 GetColor(const Scene& scene, const Ray& ray, const Hit& hit);
-     unsigned int convert3DVectorToByteColor(const glm::vec3& color);
+    void GetColor(glm::vec3& color, const Scene& scene, const Ray& ray, const Hit& hit);
+    
+    unsigned int convert3DVectorToByteColor(const glm::vec3& color);
 };

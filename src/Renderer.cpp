@@ -7,13 +7,14 @@ Renderer::~Renderer() {
 void Renderer::render(){
     Hit hit;
     Ray ray;
+    glm::vec3 color;
     ray.setOrigin(camera.getPosition()); // the origin of the ray is the camera position
     for(unsigned int y = 0; y < imageHeight; y++){
         for(unsigned int x = 0; x < imageWidth; x++){
-            constructRayThroughPixel(&ray, camera, x, y);
-            findIntersection(&hit, ray, currentScene);
+            constructRayThroughPixel(ray, camera, x, y);
+            findIntersection(hit, ray, currentScene);
             
-            glm::vec3 color = GetColor(currentScene, ray, hit);
+            GetColor(color, currentScene, ray, hit);
             unsigned int pixelIndex = (y * imageWidth + x) * REQUIRED_COMPONENTS;
             
             finalImagebuffer[pixelIndex + 0] = static_cast<unsigned char>(glm::clamp(color.r, 0.0f, 255.0f));
@@ -28,24 +29,24 @@ void Renderer::render(){
 unsigned char* Renderer::getFinalImage() const {
     return finalImagebuffer;
 }
-void Renderer::constructRayThroughPixel(Ray* ray, const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY){
+void Renderer::constructRayThroughPixel(Ray& ray, const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY){
  
     glm::vec3 pixelPoint = getPointOnImagePlane(camera, pixelX, pixelY);
  
-    ray->setDirection(glm::normalize(pixelPoint - camera.getPosition())); 
+    ray.setDirection(glm::normalize(pixelPoint - camera.getPosition())); 
 }
 
-void Renderer::findIntersection(Hit* hit, const Ray& ray, const Scene& scene){
+void Renderer::findIntersection(Hit& hit, const Ray& ray, const Scene& scene){
     float currentT = std::numeric_limits<float>::max(), minT = std::numeric_limits<float>::max();
-    hit->setSceneObject(nullptr);
+    hit.setSceneObject(nullptr);
     const std::vector<SceneObject*>& sceneObjects = scene.getSceneObjects();
     for(const SceneObject* obj : sceneObjects){
         currentT = obj->intersect(ray);
         if(currentT >= 0.0f && currentT < minT){
             minT = currentT;
-            hit->setSceneObject(obj);
-            hit->setParamtricRayValue(minT);
-            hit->setPoint(ray.pointAt(minT)); //TODO: check if this is doesnt cause issues numaricaly because of floating point precision
+            hit.setSceneObject(obj);
+            hit.setParamtricRayValue(minT);
+            hit.setPoint(ray.pointAt(minT)); //TODO: check if this is doesnt cause issues numaricaly because of floating point precision
         }
     }   
 }
@@ -57,12 +58,14 @@ glm::vec3 Renderer::getPointOnImagePlane(const Camera& camera, const unsigned in
     return glm::vec3(xScreenPos, yScreenPos, 0.0f); //assuming the screen is at z = 0 plane TODO: change it for phase 2 
     } //NOTE: should be called viewPlane?
 
-glm::vec3 Renderer::GetColor(const Scene& scene, const Ray& ray, const Hit& hit){
+void Renderer::GetColor(glm::vec3& color, const Scene& scene, const Ray& ray, const Hit& hit){
+    color = glm::vec3(0.0f); //Sets the color to be black
     if(hit.getSceneObject() != nullptr){
-        return hit.getSceneObject()->getDiffuseColor(); 
-    }
-    else{
-        return glm::vec3(0.0f, 0.0f, 0.0f); // Black for background
+        for(Light *light : scene.getLights()){
+            color += light->getDiffiusion(hit, scene);
+            //color += getSpecular(light, hit, scene);
+        
+        }
     }
 }
 

@@ -1,8 +1,5 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
+#include <glm/glm.hpp>
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
 
@@ -17,19 +14,27 @@
 #include "Hit.h"
 #include "SceneObject.h"
 #include "Shpere.h"
+#include "Light.h"
+#include "PointLight.h"
+
 static constexpr int DEFULAT_SCENE_HEIGHT_AND_WIDTH = 1000;
 
 int main(void)
 {
     // std::string scenePathInput = "src/scenes/scene1.txt";
-    char scenePathOutput[] = "bin/res/textures/testing1.png";
+    char scenePathOutput[] = "bin/res/textures/testing2.png";
 
     std::vector<SceneObject*> sceneObjects;
-    sceneObjects.push_back(new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
-    sceneObjects.push_back(new Sphere(glm::vec3(0.0f, 0.5f, 2.0f), 0.5f, glm::vec3(0.0f, 255.0f, 0.0f)));
-    Scene scene = Scene(sceneObjects);
+    std::vector<Light*> sceneLights;
 
-    Camera camera = Camera(glm::vec3(0.0f, 0.0f, 5.0f), //position
+    sceneObjects.push_back(new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
+    sceneObjects.push_back(new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 255.0f, 0.0f)));
+
+
+    sceneLights.push_back(new PointLight(glm::vec3(-2.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f));
+    Scene scene = Scene(sceneObjects, sceneLights);
+
+    Camera camera = Camera(glm::vec3(0.0f, 0.0f, 10.0f), //position
                            glm::vec3(0.0f, 0.0f, -1.0f), //to vector
                            glm::vec3(0.0f, 1.0f, 0.0f), //up vector
                            glm::vec3(1.0f, 1.0f, 0.0f), //screen right up corner
