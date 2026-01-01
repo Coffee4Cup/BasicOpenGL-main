@@ -1,9 +1,5 @@
 #include "Renderer.h"
 
-Renderer::~Renderer() {
-    delete[] finalImagebuffer;
-}
-
 void Renderer::render(){
     Hit hit;
     Ray ray;
@@ -26,12 +22,12 @@ void Renderer::render(){
 }
 
 
-unsigned char* Renderer::getFinalImage() const {
-    return finalImagebuffer;
+const unsigned char* Renderer::getFinalImage() const {
+    return finalImagebuffer.data();
 }
 void Renderer::constructRayThroughPixel(Ray& ray, const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY){
  
-    glm::vec3 pixelPoint = getPointOnImagePlane(camera, pixelX, pixelY);
+    glm::vec3 pixelPoint = getPointOnImagePlane(pixelX, pixelY);
  
     ray.setDirection(glm::normalize(pixelPoint - camera.getPosition())); 
 }
@@ -52,11 +48,9 @@ void Renderer::findIntersection(Hit& hit, const Ray& ray, const Scene& scene){
 }
 
     //NOTE: could this be more consise? brobably yes using glm vector operations 
-glm::vec3 Renderer::getPointOnImagePlane(const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY){
-    float xScreenPos = camera.getScreenLeftDownCorner().x + camera.getScreenWidth() * (float) pixelX / (float) imageWidth;
-    float yScreenPos = camera.getScreenLeftDownCorner().y + camera.getScreenHeight() * (float) pixelY / (float) imageHeight;
-    return glm::vec3(xScreenPos, yScreenPos, 0.0f); //assuming the screen is at z = 0 plane TODO: change it for phase 2 
-    } //NOTE: should be called viewPlane?
+glm::vec3 Renderer::getPointOnImagePlane(const unsigned int& pixelX, const unsigned int& pixelY){
+    return viewPlaneCenter + xCoefficient * (float)pixelX - xTerm - yCoefficient * (float)pixelY + yterm;
+}
 
 void Renderer::GetColor(glm::vec3& color, const Scene& scene, const Ray& ray, const Hit& hit){
     color = glm::vec3(0.0f); //Sets the color to be black

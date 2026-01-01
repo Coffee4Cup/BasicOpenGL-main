@@ -14,24 +14,32 @@ private:
 
     static constexpr int DEFAULT_IMAGE_HEIGHT_AND_WIDTH = 1000; //the default height and width of the output image
     static constexpr int REQUIRED_COMPONENTS = 4; //(R,G,B,A) usually writen as req_comps in stb image write
+    static constexpr float HALF_SCREEN_SCALAR = 0.5f;
 
-    Scene currentScene;
-    Camera camera;
+    const Scene& currentScene;
+    const Camera& camera;
 
-    unsigned char* finalImagebuffer;
-    const unsigned int imageWidth;
-    const unsigned int imageHeight;
+    std::vector<unsigned char> finalImagebuffer;
+    const unsigned int imageWidth; //number of pixels in line
+    const unsigned int imageHeight; //number of pixels in column
 
+    const glm::vec3 viewPlaneCenter; //P_c of the equation from the presentation
+    const glm::vec3 xTerm; // w/2*V_right
+    const glm::vec3 yterm; // w/2*V_up
+    const glm::vec3 xCoefficient; // the slope of x R*V_right = (width of screen) / (number of pixels in line on the viewPanel)
+    const glm::vec3 yCoefficient;
 public:
-
-    Renderer(Camera camera, const Scene& scene, unsigned int width, unsigned int height)
+    Renderer(Camera& camera, const Scene& scene, unsigned int width, unsigned int height)
     : currentScene(scene),
     camera(camera),
-    finalImagebuffer(new unsigned char[width * height * REQUIRED_COMPONENTS]),
-    imageWidth(width), imageHeight(height)
+    finalImagebuffer(width * height * REQUIRED_COMPONENTS),
+    imageWidth(width), imageHeight(height),
+    viewPlaneCenter(camera.getScreenCenter()),
+    xTerm(camera.getScreenWidth() * HALF_SCREEN_SCALAR * camera.getRightVector()),
+    yterm(camera.getScreenHeight() * HALF_SCREEN_SCALAR * camera.getUpVector()),
+    xCoefficient((camera.getScreenWidth() / (float)width) * camera.getRightVector()),
+    yCoefficient((camera.getScreenHeight() / (float)height) * camera.getUpVector())
     {}
-    
-    ~Renderer();
     void initialize(const std::string& scenePathInput);
 
     /**
@@ -40,7 +48,7 @@ public:
     */
     void render();
 
-    unsigned char* getFinalImage() const;
+    const unsigned char* getFinalImage() const;
 
 private:
     /**
@@ -54,7 +62,7 @@ private:
      */
     void constructRayThroughPixel(Ray& ray, const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY);
     void findIntersection(Hit& hit, const Ray& ray, const Scene& scene);
-    glm::vec3 getPointOnImagePlane(const Camera& camera, const unsigned int& pixelX, const unsigned int& pixelY);
+    glm::vec3 getPointOnImagePlane(const unsigned int& pixelX, const unsigned int& pixelY);
 
     // Returns the color as a 3D vector (0.0 to 255.0 range or 0.0 to 1.0)
     void GetColor(glm::vec3& color, const Scene& scene, const Ray& ray, const Hit& hit);

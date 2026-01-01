@@ -19,10 +19,11 @@ private:
     glm::vec3 position;
     glm::vec3 toVector;
     glm::vec3 upVector;
-    glm::vec3 screenRightUpCorner;
-    glm::vec3 screenLeftDownCorner;
-    unsigned int screenWidth;
-    unsigned int screenHeight;
+    glm::vec3 rightVector;
+    glm::vec3 screenCenter;
+    const float screenWidth;
+    const float screenHeight;
+    const float distance;
 
 public:
     /**
@@ -33,14 +34,16 @@ public:
      * o Left down corner of the screen is located at (-1, -1, 0) in the 3D scene.
      * o Camera position specified in input file.
      */
-    Camera();
-    Camera(const glm::vec3& position, const glm::vec3& toVector, const glm::vec3& upVector, const glm::vec3
-        &screenRightUpCorner, const glm::vec3& screenLeftDownCorner);
+   Camera(const glm::vec3& position, const glm::vec3& toVector,
+                const glm::vec3& upVector, float screenWidth, float screenHeight,
+                float distance);
     glm::vec3 getPosition() const;
     glm::vec3 getToVector() const;
     glm::vec3 getUpVector() const;
+    glm::vec3 getRightVector() const;
     glm::vec3 getScreenRightUpCorner() const;
     glm::vec3 getScreenLeftDownCorner() const;
-    unsigned int getScreenWidth() const;
-    unsigned int getScreenHeight() const;
+    float getScreenWidth() const;
+    float getScreenHeight() const;
+    glm::vec3 getScreenCenter() const;
 };
