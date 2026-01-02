@@ -13,6 +13,7 @@ public:
 
     float intersect(const Ray& ray) const override;
     glm::vec3 getNormalAt(const glm::vec3& point) const override;
+
 private:
     const glm::vec3 center;
     const float radius;

@@ -19,8 +19,6 @@ class SceneObject {
      * @return The hit information if the ray intersects the object, otherwise std::nullopt.
      */
     virtual float intersect(const Ray& ray) const = 0;
-    virtual glm::vec3 getDiffuseColor(const glm::vec3& point) const;
-    virtual float getShininess() const { return shininess; }
     virtual glm::vec3 getNormalAt(const glm::vec3& point) const = 0;
     glm::vec3 getReflectionVector(const glm::vec3& point, const glm::vec3& incidentVector) const;
     glm::vec3 getSpecularCoefficent() const {return DEFULT_SPECULAR_COEFFICENT;} //the K_s in the eqauations
