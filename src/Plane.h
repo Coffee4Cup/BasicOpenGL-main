@@ -12,14 +12,9 @@ public:
     ~Plane() override;
 
     float intersect(const Ray& ray) const override;
-    glm::vec3 getDiffuseColor(const glm::vec3& point) const override;
-    glm::vec3 getSpecularColor() const override;
-    float getShininess() const override;
     glm::vec3 getNormalAt(const glm::vec3& point) const override;
-
 private:
     static constexpr float EPSILON = 1e-6f;
     const glm::vec3 m_point;
     const glm::vec3 m_normal;
-    ITextureStrategy* m_textureStrategy;
 };

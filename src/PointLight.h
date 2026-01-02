@@ -12,5 +12,5 @@ class PointLight : public Light {
     public:
         PointLight(const glm::vec3& position, const glm::vec3& color, float intensity);
         glm::vec3 getDiffiusion(const Hit& hit, const Scene& scene) const override;
-
+        glm::vec3 getSpecular(const class Hit& hit, const class Scene& scene, const class Ray& ray) const override;
 };

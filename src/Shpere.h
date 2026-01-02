@@ -12,13 +12,8 @@ public:
     ~Sphere() override;
 
     float intersect(const Ray& ray) const override;
-    glm::vec3 getDiffuseColor(const glm::vec3& point) const override;
-    glm::vec3 getSpecularColor() const override;
-    float getShininess() const override;
     glm::vec3 getNormalAt(const glm::vec3& point) const override;
-
 private:
     const glm::vec3 center;
     const float radius;
-    ITextureStrategy* m_textureStrategy;
 };

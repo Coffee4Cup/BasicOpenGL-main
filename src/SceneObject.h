@@ -1,20 +1,31 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "ITextureStrategy.h"
 
 class Ray; 
-
 class SceneObject {
-public:
-    virtual ~SceneObject() = default;
+  private:
+   static constexpr glm::vec3 DEFULT_SPECULAR_COEFFICENT = glm::vec3(0.7f);
+   static constexpr glm::vec3 BASE_SPECULAR_COLOR = glm::vec3(255.0f); //NOTE: not sure where this best be 
+  protected:
+  float shininess = 32.0f;
+  ITextureStrategy* m_textureStrategy;
+   public:
+   SceneObject(ITextureStrategy* textureStrategy) : m_textureStrategy(textureStrategy){}
+    virtual ~SceneObject() { delete m_textureStrategy; }
       /***
      * Intersects the ray with the scene object.
      * @param ray The ray to intersect with.
      * @return The hit information if the ray intersects the object, otherwise std::nullopt.
      */
     virtual float intersect(const Ray& ray) const = 0;
-    virtual glm::vec3 getDiffuseColor(const glm::vec3& point) const = 0;
-    virtual glm::vec3 getSpecularColor() const = 0;
-    virtual float getShininess() const = 0;
+    virtual glm::vec3 getDiffuseColor(const glm::vec3& point) const;
+    virtual float getShininess() const { return shininess; }
     virtual glm::vec3 getNormalAt(const glm::vec3& point) const = 0;
     glm::vec3 getReflectionVector(const glm::vec3& point, const glm::vec3& incidentVector) const;
+    glm::vec3 getSpecularCoefficent() const {return DEFULT_SPECULAR_COEFFICENT;} //the K_s in the eqauations
+    glm::vec3 getBaseSpecularColor() const {return BASE_SPECULAR_COLOR;}
+
+
+
 };
