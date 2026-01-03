@@ -1,8 +1,8 @@
 #include "Shpere.h"
 #include "ITextureStrategy.h"
 
-Sphere::Sphere(const glm::vec3& center, float radius, ITextureStrategy* textureStrategy)
-    : SceneObject(textureStrategy), center(center), radius(radius) {}
+Sphere::Sphere(const glm::vec3& center, float radius, ITextureStrategy* textureStrategy, float shininess)
+    : SceneObject(textureStrategy, shininess), center(center), radius(radius) {}
 
 Sphere::~Sphere() {}
 

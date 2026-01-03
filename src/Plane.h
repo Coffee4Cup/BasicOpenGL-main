@@ -8,7 +8,7 @@ class ITextureStrategy;
 
 class Plane : public SceneObject {
 public:
-    Plane(const glm::vec3& point, const glm::vec3& normal, ITextureStrategy* textureStrategy);
+    Plane(const glm::vec3& point, const glm::vec3& normal, ITextureStrategy* textureStrategy, float shininess = 10.0f);
     ~Plane() override;
 
     float intersect(const Ray& ray) const override;

@@ -2,6 +2,7 @@
 #include "Hit.h"
 #include "Scene.h"
 #include "SceneObject.h"
+#include <iostream>
 
 PointLight::PointLight(const glm::vec3& position, const glm::vec3& color, float intensity)
     : Light(intensity), position(position), color(color) {}
@@ -26,8 +27,15 @@ glm::vec3 PointLight::getSpecular(const Hit& hit, const Scene& scene, const Ray&
     glm::vec3 hitPoint = hit.getHitPoint();
     const SceneObject* hitObject = hit.getSceneObject();
     glm::vec3 reflectionVector = hitObject->getReflectionVector(hitPoint,position - hitPoint);
-    float angleBetweenViewAndReflectionRadian = glm::dot(ray.getDirection(), reflectionVector);
+    float angleBetweenViewAndReflectionRadian = glm::dot(glm::normalize(ray.getDirection()),glm::normalize(reflectionVector));
     angleBetweenViewAndReflectionRadian = glm::max(angleBetweenViewAndReflectionRadian, 0.0f);
-    glm::vec3 specular = color *(float) pow(angleBetweenViewAndReflectionRadian, hitObject->getShininess()) * (hitObject->getBaseSpecularColor() * hitObject->getSpecularCoefficent());
+
+    if (angleBetweenViewAndReflectionRadian > 0.25f) {
+        // Set a standard breakpoint on the line below to "skip" to a positive iteration
+        float hitDetected = angleBetweenViewAndReflectionRadian; 
+    }
+
+    float specularFactor = static_cast<float>(pow(angleBetweenViewAndReflectionRadian, hitObject->getShininess()));
+    glm::vec3 specular = color * specularFactor * (hitObject->getSpecularColor() * hitObject->getSpecularCoefficent());
     return specular;
 }

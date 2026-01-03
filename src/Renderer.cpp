@@ -57,7 +57,7 @@ void Renderer::GetColor(glm::vec3& color, const Scene& scene, const Ray& ray, co
     if(hit.getSceneObject() != nullptr){
         for(Light *light : scene.getLights()){
             color += light->getDiffiusion(hit, scene);
-            //color += getSpecular(light, hit, scene);
+            color += light->getSpecular(hit, scene, ray);
         
         }
     }

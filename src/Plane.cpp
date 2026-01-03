@@ -2,8 +2,8 @@
 #include <limits>
 #include "ITextureStrategy.h"
 
-Plane::Plane(const glm::vec3& point, const glm::vec3& normal, ITextureStrategy* textureStrategy)
-    : SceneObject(textureStrategy), m_point(point), m_normal(glm::normalize(normal)) {}
+Plane::Plane(const glm::vec3& point, const glm::vec3& normal, ITextureStrategy* textureStrategy, float shininess)
+    : SceneObject(textureStrategy, shininess), m_point(point), m_normal(glm::normalize(normal)) {}
 
 Plane::~Plane() {}
 float Plane::intersect(const Ray& ray) const {

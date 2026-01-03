@@ -8,7 +8,7 @@ class ITextureStrategy;
 
 class Sphere : public SceneObject {
 public:
-    Sphere(const glm::vec3& center, float radius, ITextureStrategy* textureStrategy);
+    Sphere(const glm::vec3& center, float radius, ITextureStrategy* textureStrategy, float shininess = 10.0f);
     ~Sphere() override;
 
     float intersect(const Ray& ray) const override;
